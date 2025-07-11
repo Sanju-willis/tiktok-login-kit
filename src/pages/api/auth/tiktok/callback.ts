@@ -23,8 +23,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { access_token, open_id } = result.data;
 
     res.status(200).json({ message: 'Login success', open_id, access_token });
-  } catch (err: any) {
-    console.error('[TikTok Callback Error]', err.response?.data || err.message);
-    res.status(500).json({ error: 'TikTok token exchange failed' });
-  }
+ } catch (err) {
+  const error = err as { response?: { data?: unknown }; message?: string };
+  console.error('[TikTok Callback Error]', error.response?.data || error.message);
+  res.status(500).json({ error: 'TikTok token exchange failed' });
+}
+
+
 }
